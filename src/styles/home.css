@@ -1,0 +1,152 @@
+.home-container {
+    max-width: 1200px;
+    padding-top: 48px;
+    padding-bottom: 48px;
+}
+
+.home-hero {
+    min-height: 430px;
+    padding: 48px;
+    background: #ffffff;
+    border-radius: 28px;
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.08),
+        0 2px 4px -2px rgba(0, 0, 0, 0.08);
+}
+
+.home-content {
+    padding-right: 24px;
+}
+
+.home-eyebrow {
+    color: #787574;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+.home-content h1 {
+    margin: 20px 0 16px;
+    color: #000000;
+    font-size: clamp(36px, 4vw, 54px);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: -2px;
+}
+
+.home-content h1 span {
+    color: #5433eb;
+}
+
+.home-content p {
+    max-width: 440px;
+    margin-bottom: 24px;
+    color: #787574;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+/* ``` */
+.home-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+.home-primary-btn,
+.home-secondary-btn {
+    padding: 12px 20px;
+    border-radius: 9999px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.home-primary-btn {
+    color: #fff;
+    background-color: #5433eb;
+    border: 1px solid #5433eb;
+}
+
+.home-primary-btn:hover {
+    color: #fff;
+    background-color: #4324d1;
+    border-color: #4324d1;
+    transform: translateY(-2px);
+}
+
+.home-primary-btn span {
+    margin-left: 8px;
+}
+
+.home-secondary-btn {
+    color: #000;
+    background-color: #fff;
+    border: 1px solid #ebebeb;
+}
+
+.home-secondary-btn:hover {
+    color: #5433eb;
+    background-color: #f2f4f5;
+}
+/* ``` */
+
+.home-image-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+    padding: 16px;
+    background: #f2f4f5;
+    border-radius: 28px;
+}
+
+.home-image {
+    display: block;
+    width: 100%;
+    max-width: 540px;
+    max-height: 420px;
+    object-fit: contain;
+    border-radius: 20px;
+}
+
+@media (max-width: 767px) {
+    .home-container {
+        padding-top: 24px;
+        padding-bottom: 32px;
+    }
+
+    .home-hero {
+        padding: 28px 22px;
+        row-gap: 28px;
+    }
+
+    .home-content {
+        padding-right: 12px;
+    }
+
+    .home-content h1 {
+        font-size: 38px;
+        letter-spacing: -1.5px;
+    }
+
+    .home-content p {
+        font-size: 15px;
+    }
+
+    .home-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .home-actions .btn {
+        width: 100%;
+    }
+
+    .home-image-wrapper {
+        min-height: 230px;
+    }
+
+    .home-image {
+        max-height: 240px;
+    }
+}
