@@ -111,7 +111,7 @@ function Cart(){
                         Clear Cart
                     </Button>
 
-                    <Button className="checkout-btn">
+                    <Button as={Link} to="/checkout" className="checkout-btn">
                         Proceed to Checkout →
                     </Button>
                 </div>

@@ -186,6 +186,31 @@
     background: #4324d1;
     color: #fff;
 }
+.auth-link {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 16px !important;
+  margin-left: 8px;
+  border: 1px solid #5433eb;
+  border-radius: 8px;
+  color: #5433eb !important;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.auth-link:hover {
+  background-color: #5433eb;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(25, 135, 84, 0.2);
+}
+
+.auth-link.active {
+  background-color: #5433eb;
+  color: #fff !important;
+}
 
 @media (max-width: 991px) {
     .shop-search {

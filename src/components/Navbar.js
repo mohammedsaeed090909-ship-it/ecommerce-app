@@ -1,6 +1,6 @@
 import { Navbar, Container, Nav ,Form,Button} from "react-bootstrap";
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearch } from "../rtk/slices/productSlice";
 import "../styles/navbar.css"
@@ -16,6 +16,7 @@ function AppNavbar(){
     const cartCount = cart.reduce((total, product) => {
     return total + product.quantity;
 }, 0);
+    const token = useSelector((state) => state.auth.token);
     return(
         <Navbar expand="lg" className="shop-navbar">
         <Container className="shop-navbar-container">
@@ -37,6 +38,18 @@ function AppNavbar(){
                 onChange={(e)=>setSearchInput(e.target.value)}/>
                 <Button type='submit' variant="outline-success"><i className="bi bi-arrow-right"></i></Button>
             </Form>
+            {token ? (
+            <Link to="/profile" className="nav-link auth-link">
+                <i className="bi bi-person-circle me-2"></i>
+                My Profile
+            </Link>
+            
+            ) : (
+            <Nav.Link as={NavLink} to="/login"  className="auth-link">
+                <i className="bi bi-box-arrow-in-right me-2"></i>
+                Login
+            </Nav.Link>
+            )}
             </Navbar.Collapse>
         </Container>
         </Navbar>
