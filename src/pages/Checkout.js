@@ -1,8 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Navigate, useLocation } from "react-router-dom";
+import {  Navigate, useLocation } from "react-router-dom";
 import { Container, Form } from "react-bootstrap";
 import { useState } from "react";
 import { Cleare} from "../rtk/slices/cartSlice"
+import { apiFetch } from "../rtk/api";
 import "../styles/checkout.css"
 
 function Checkout(){
@@ -23,27 +24,6 @@ function Checkout(){
     }, 0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-
-const getUserId = async () => {
-    const response = await fetch("https://fakestoreapi.com/users");
-
-    if (!response.ok) {
-        throw new Error("Failed to fetch users");
-    }
-
-    const users = await response.json();
-
-    const currentUser = users.find(
-        (item) => item.username === user?.username
-    );
-
-if (!currentUser) {
-    throw new Error("User not found");
-}
-
-return currentUser.id;
-};
-
 
 const handleSubmit = async (e) => {
         e.preventDefault();
@@ -71,45 +51,24 @@ const handleSubmit = async (e) => {
         setLoading(false);
         return;
     }
-
     try {
-        // Get the actual user ID
-        const userId = await getUserId();
-
-        // Prepare order data
         const orderData = {
-            userId,
+            userId: user.id,
             date: new Date().toISOString(),
-            products: cart.map((product) => ({
-                productId: product.id,
-                quantity: product.quantity,
+            products: cart.map((p) => ({
+                productId: p.id,
+                quantity: p.quantity,
             })),
         };
 
-        // Send order to Fake Store API
-        const response = await fetch(
-            "https://fakestoreapi.com/carts",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(orderData),
-            }
-        );
+        const result = await apiFetch("/carts", {
+            method: "POST",
+            body: orderData,
+            auth: true,
+        });
 
-        if (!response.ok) {
-            throw new Error("Failed to place order");
-        }
-
-        const result = await response.json();
-
-        // Clear cart only after successful response
         dispatch(Cleare());
-
-        alert(
-            `Order placed successfully! Order ID: ${result.id}`
-        );
+        alert(`Order placed successfully! Order ID: ${result.id}`);
     } catch (error) {
         setError(error.message || "Something went wrong");
     } finally {
@@ -129,6 +88,8 @@ if (!token) {
     if (cart.length === 0) {
         return <Navigate to="/products" replace />;
     }
+
+
     return(
     <Container className="checkout-page">
         <div className="checkout-header">
@@ -145,7 +106,6 @@ if (!token) {
                         Enter your information to complete your order.
                     </p>
             <Form onSubmit={handleSubmit}>
-                <p>Your cart is ready for checkout.</p>
                 {error && (<p className="checkout-error">{error}</p>)}
 
                 <Form.Group className="checkout-field">
