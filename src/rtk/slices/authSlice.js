@@ -1,51 +1,61 @@
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { apiFetch, getToken, isTokenValid  } from "../api";
 
-export const loginUser = createAsyncThunk("auth/loginUser",
-    async (userData, thunkAPI) => {
-        try {
-        const response = await fetch(
-            "https://fakestoreapi.com/auth/login",
-            {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(userData),
-            }
-        );
+const loadSession = () => {
+    // Remove the old localStorage keys left by the previous version
+    ["token", "username", "email"].forEach((k) => localStorage.removeItem(k));
 
-        if (!response.ok) {
-            return thunkAPI.rejectWithValue("Login failed");
+    try {
+        const token = getToken();
+        const user = JSON.parse(sessionStorage.getItem("user"));
+
+        if (isTokenValid(token) && user?.id && user?.username) {
+            return { token, user: { id: user.id, username: user.username } };
         }
+    } catch (e) {
+        // fall through to a clean state
+    }
 
-        const data = await response.json();
-        return data;
-        } catch (error) {
-        return thunkAPI.rejectWithValue("Something went wrong");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("user");
+    return { token: null, user: null };
+};
+
+
+export const loginUser = createAsyncThunk(
+    "auth/loginUser",
+    async ({ username, password }, thunkAPI) => {
+        try {
+            const { token } = await apiFetch("/auth/login", {
+                method: "POST",
+                body: { username, password },
+            });
+
+            // The login endpoint returns only a token, so look up the user's id
+            const users = await apiFetch("/users");
+            const found = users.find((u) => u.username === username);
+            if (!found) return thunkAPI.rejectWithValue("User not found");
+
+            return { token, user: { id: found.id, username: found.username } };
+        } catch (err) {
+            if (err.status === 401) {
+                return thunkAPI.rejectWithValue("Invalid username or password");
+            }
+            return thunkAPI.rejectWithValue("Something went wrong");
         }
     }
-    );
+);
+
 
     const authSlice = createSlice({
     name: "auth",
-    initialState: {
-        user:localStorage.getItem("username")? {
-            username: localStorage.getItem("username"),
-            email: localStorage.getItem("email"),
-        }: null,
-        token: localStorage.getItem("token"),
-        loading: false,
-        error: null,
-    },
+    initialState: { ...loadSession(), loading: false, error: null },
     reducers: {
         logout: (state) => {
         state.user = null;
         state.token = null;
-
-        localStorage.removeItem("token");
-        localStorage.removeItem("username");
-        localStorage.removeItem("email");
+        state.error = null;
         },
     },
     extraReducers: (builder) => {
@@ -57,19 +67,11 @@ export const loginUser = createAsyncThunk("auth/loginUser",
         .addCase(loginUser.fulfilled, (state, action) => {
             state.loading = false;
             state.token = action.payload.token;
-
-            state.user = {
-                username: action.meta.arg.username,
-                email: action.meta.arg.email,
-            };
-
-            localStorage.setItem("token", action.payload.token);
-            localStorage.setItem("username", action.meta.arg.username);
-            localStorage.setItem("email", action.meta.arg.email);
+            state.user =action.payload.user;
         })
         .addCase(loginUser.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.payload;
+            state.error = action.payload || "Something went wrong"
         });
     },
     });
