@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Cleare } from "../rtk/slices/cartSlice";
+import { apiFetch } from "../rtk/api";
 import {
 Container,
 Card,
@@ -20,7 +20,6 @@ const navigate = useNavigate();
 
 const handleLogout = () => {
     dispatch(logout());
-    dispatch(Cleare());
     navigate("/login", { replace: true });
 };
 
@@ -29,40 +28,24 @@ const [loading, setLoading] = useState(true);
 const [error, setError] = useState("");
 
 useEffect(() => {
-const fetchUser = async () => {
-try {
-const response = await fetch(
-"https://fakestoreapi.com/users"
-);
-
-    if (!response.ok) {
-        throw new Error("Failed to fetch users");
+    const fetchUser = async () => {
+        try {
+            const currentUser = await apiFetch(`/users/${user.id}`, {
+                auth: true,
+            });
+            setProfile(currentUser);
+        } catch (err) {
+            setError("Could not load profile data.");
+        } finally {
+            setLoading(false);
         }
-
-        const users = await response.json();
-
-        const currentUser = users.find(
-        (item) => item.username === user?.username
-        );
-
-        if (!currentUser) {
-        throw new Error("User not found");
-        }
-
-        setProfile(currentUser);
-    } catch (err) {
-        setError("Could not load profile data.");
-    } finally {
-        setLoading(false);
-    }
     };
 
-    if (user?.username) {
-    fetchUser();
+    if (user?.id) {
+        fetchUser();
     } else {
-    setLoading(false);
+        setLoading(false);
     }
-
 }, [user]);
 
 if (loading) {

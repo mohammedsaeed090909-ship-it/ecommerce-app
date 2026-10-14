@@ -1,5 +1,5 @@
 import { Navbar, Container, Nav ,Form,Button} from "react-bootstrap";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearch } from "../rtk/slices/productSlice";
@@ -9,8 +9,12 @@ function AppNavbar(){
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-        const [search, setSearchInput] = useState("");
+    const [search, setSearchInput] = useState("");
+    const reduxSearch = useSelector((state) => state.products.search);
 
+    useEffect(() => {
+        setSearchInput(reduxSearch);
+    }, [reduxSearch]);
 
     const cart = useSelector((state) => state.cart || []);
     const cartCount = cart.reduce((total, product) => {
@@ -24,7 +28,7 @@ function AppNavbar(){
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav" >
             <Nav className="shop-nav-links">
-                <Nav.Link as={NavLink} to="/"end>Home</Nav.Link>
+                <Nav.Link as={NavLink} to="/home"end>Home</Nav.Link>
                 <Nav.Link as={NavLink} to="/products">Products</Nav.Link>
                 <Nav.Link as={NavLink} to="/categories">Categories</Nav.Link>
                 <Nav.Link as={NavLink} to="/cart">Cart<span className="cart-count">{cartCount}</span></Nav.Link>

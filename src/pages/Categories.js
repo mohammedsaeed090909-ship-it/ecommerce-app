@@ -1,17 +1,21 @@
 
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Container, Row, Card, Button, Col, Spinner ,Alert} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { fetchProducts } from "../rtk/slices/productSlice";
 import "../styles/categories.css"
 
 function Categories(){
     const navigate = useNavigate()
-    const { items, loading, error } = useSelector(
-    (state) => state.products
-);
-    const filterCategories = [...new Set(
-        items.map((product)=>product.category)
-    )]
+    const dispatch = useDispatch();
+    const { items, loading, error } = useSelector((state) => state.products);
+
+        useEffect(() => {
+        dispatch(fetchProducts());
+    }, [dispatch]);
+
+    const filterCategories = [...new Set(items.map((product)=>product.category))]
 
     if (loading) {
         return (

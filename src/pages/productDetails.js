@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, Link } from "react-router-dom"
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, Alert, Spinner } from "react-bootstrap";
 import { useEffect } from "react";
 import { fetchProducts } from "../rtk/slices/productSlice";
 import { addToCart } from "../rtk/slices/cartSlice";
@@ -16,19 +16,35 @@ function ProductDetails(){
     useEffect(()=>{
             dispatch(fetchProducts())
     },[dispatch])
-    if (loading) {
-    return <Container><p>Loading...</p></Container>;
+
+    if (loading || (items.length === 0 && !error)) {
+        return (
+            <Container className="product-details-page text-center">
+                <Spinner animation="border" />
+            </Container>
+        );
     }
+
     if (error) {
-        return <Container><p>{error}</p></Container>;
+        return (
+            <Container className="product-details-page">
+                <Alert variant="danger">{error}</Alert>
+            </Container>
+        );
     }
-    if(!product){
-        return(
-        <Container className="product-details-page">
-            <div className="product-loading">
-                <h2>Loading...</h2>
-            </div>
-        </Container>)
+
+    if (!product) {
+        return (
+            <Container className="product-details-page text-center">
+                <h2>Product not found</h2>
+                <p className="text-muted">
+                    The product you're looking for doesn't exist.
+                </p>
+                <Button as={Link} to="/products" className="back-products-btn">
+                    ← Back to products
+                </Button>
+            </Container>
+        );
     }
 
     return(

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../rtk/slices/productSlice";
+import { fetchProducts,setSearch} from "../rtk/slices/productSlice";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { addToCart } from "../rtk/slices/cartSlice";
 import { Link ,useNavigate,useSearchParams} from "react-router-dom";
@@ -35,7 +35,7 @@ function Products() {
     });
     useEffect(() => {
     setCurrentPage(1);
-}, [category]);
+}, [category,search]);
     const filterCategories =[...new Set(
     items.map((product)=>product.category))
 ]
@@ -58,6 +58,18 @@ function Products() {
                 <h1>Discover Products</h1>
                 <p>Explore our collection and find something you'll love.</p>
             </div>
+            {search && (
+                <div className="active-search">
+                    <span>Results for “{search}”</span>
+                    <Button
+                        className="clear-search-btn"
+                        onClick={() => dispatch(setSearch(""))}
+                    >
+                        Clear ✕
+                    </Button>
+                </div>
+            )}
+
             <div className="category-filters">
                 <Button className={`category-btn ${!category ? "active" : ""}`}
                 onClick={() => navigate("/products")}>   
@@ -98,6 +110,22 @@ function Products() {
                 ))}
                 
             </Row>
+            {filteredProducts.length === 0 && (
+                <div className="products-empty">
+                    <h3>No products found</h3>
+                    <p>Try a different search or category.</p>
+                    <Button
+                        className="category-btn"
+                        onClick={() => {
+                            dispatch(setSearch(""));
+                            navigate("/products");
+                        }}
+                    >
+                        Reset filters
+                    </Button>
+                </div>
+            )}
+
             {totalPages > 1 && (
             <div className="pagination">
                 <Button

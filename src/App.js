@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
 import AppNavbar from './components/Navbar';
 import Products from './pages/Products';
@@ -12,23 +12,27 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import Checkout from './pages/Checkout';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
     <div className="App">
       <AppNavbar/>
       <Routes>
-        <Route path="/" element={<Home/>} />
+        <Route path="/" element={<Navigate to="/products" replace />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/products" element={<Products />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/products/:id" element={<ProductDetails/>} />
         <Route path="/login" element={<Login />} />
+        <Route path="/cart" element={<Cart/>} />
         <Route element={<ProtectedRoute/>}>
-          <Route path="/cart" element={<Cart/>} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/checkout" element={<Checkout />} />
         </Route>
         <Route path="/register" element={<Register />} />
+        <Route path="*" element={<NotFound />} />
+        
       </Routes>      
       <Footer/>
     </div>

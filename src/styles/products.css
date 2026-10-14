@@ -230,6 +230,34 @@
     border-color: #eee;
 }
 
+/* Active search chip */
+.active-search {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 8px 8px 8px 18px;
+    color: #5433eb;
+    background-color: #f0edff;
+    border-radius: 9999px;
+    font-size: 13px;
+}
+
+.clear-search-btn {
+    padding: 6px 12px;
+    color: #5433eb;
+    background-color: #fff;
+    border: 1px solid #5433eb;
+    border-radius: 9999px;
+    font-size: 12px;
+}
+
+.clear-search-btn:hover {
+    color: #fff;
+    background-color: #5433eb;
+    border-color: #5433eb;
+}
+
 /* Responsive */
 @media (max-width: 576px) {
     .products-container {
