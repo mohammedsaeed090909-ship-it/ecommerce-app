@@ -131,6 +131,8 @@ if (!token) {
 
                 <aside className="checkout-card checkout-summary">
                 <h3>Order Summary</h3>
+
+
                 <div className="checkout-summary-row">
                     <span>Total Items</span>
                     <span>{totalItems}</span>

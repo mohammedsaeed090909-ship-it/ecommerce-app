@@ -23,7 +23,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/products" element={<Products />} />
         <Route path="/categories" element={<Categories />} />
-        <Route path="/products/:id" element={<ProductDetails/>} />
+        <Route path="/products/:id" element={<ProductDetails/>} />  
         <Route path="/login" element={<Login />} />
         <Route path="/cart" element={<Cart/>} />
         <Route element={<ProtectedRoute/>}>
@@ -32,7 +32,6 @@ function App() {
         </Route>
         <Route path="/register" element={<Register />} />
         <Route path="*" element={<NotFound />} />
-        
       </Routes>      
       <Footer/>
     </div>

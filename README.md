@@ -6,6 +6,11 @@ A responsive e-commerce web application built with React, Redux Toolkit, and Rea
 
 [View Live Application](https://ecommerce-app-three-gray.vercel.app/home)
 
+## 📸 Screenshots
+
+![Products Page](./public/screenshots/products.png)
+![Homes Page](./public/screenshots/homePage.png)
+
 ## ✨ Features
 
 - Browse products fetched from Fake Store API.
